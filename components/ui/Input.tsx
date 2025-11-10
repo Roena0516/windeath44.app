@@ -11,6 +11,7 @@ interface InputProps {
   placeholder?: string;
   name?: string;
   required?: boolean;
+  maxLength?: number;
 }
 
 const InputWrapper = styled.div`
@@ -52,6 +53,7 @@ export default function Input({
   placeholder,
   name,
   required = false,
+  maxLength,
 }: InputProps) {
   return (
     <InputWrapper>
@@ -63,6 +65,7 @@ export default function Input({
         placeholder={placeholder}
         name={name}
         required={required}
+        maxLength={maxLength}
       />
     </InputWrapper>
   );

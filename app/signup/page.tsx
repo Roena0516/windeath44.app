@@ -1,0 +1,412 @@
+'use client';
+
+import styled from '@emotion/styled';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import WindowHeader from '@/components/layout/WindowHeader';
+import Input from '@/components/ui/Input';
+import { colors, fonts } from '@/lib/styles/theme';
+import { signUp, emailValidationRequest, verifyEmailCode } from '@/lib/api/user';
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: ${colors.white};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const WindowContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${colors.white};
+  border: 2.572px solid ${colors.primary};
+  display: flex;
+  flex-direction: column;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  width: 100%;
+  padding: 8.572px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  width: 100%;
+  background-color: ${colors.lightprimary};
+  border: 2.572px solid ${colors.stroke};
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+`;
+
+const LogoSection = styled.div`
+  width: 100%;
+  height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 4px;
+  background-color: #ffeefd;
+  border: 2px solid ${colors.secondary};
+  flex-shrink: 0;
+`;
+
+const FormSection = styled.div`
+  flex: 1;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+`;
+
+const FormFields = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+`;
+
+const InputRow = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+`;
+
+const TimerBox = styled.div`
+  width: 60px;
+  height: 32px;
+  background-color: ${colors.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ${fonts.primary};
+  font-size: 14px;
+  color: ${colors.black};
+  box-shadow: inset -1px -1px 0px 0px #ffffff,
+    inset 1px 1px 0px 0px ${colors.black},
+    inset -2px -2px 0px 0px ${colors.darkprimary},
+    inset 2px 2px 0px 0px ${colors.darkprimary};
+  flex-shrink: 0;
+`;
+
+const SmallButton = styled.button`
+  width: 100px;
+  height: 32px;
+  background-color: ${colors.lightprimary};
+  border: none;
+  font-family: ${fonts.primary};
+  font-size: 14px;
+  line-height: 15px;
+  color: ${colors.black};
+  cursor: pointer;
+  box-shadow: inset -1px -1px 0px 0px ${colors.black},
+    inset 1px 1px 0px 0px #ffffff,
+    inset -2px -2px 0px 0px ${colors.darkprimary},
+    inset 2px 2px 0px 0px ${colors.secondary};
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: ${colors.secondary};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 8px;
+`;
+
+const StyledButton = styled.button`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 40px;
+  padding: 9px 24px;
+  background-color: ${colors.lightprimary};
+  font-family: ${fonts.primary};
+  font-size: 18px;
+  line-height: 15px;
+  color: ${colors.black};
+  text-align: center;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  box-shadow: inset -1px -1px 0px 0px ${colors.black},
+    inset 1px 1px 0px 0px #ffffff,
+    inset -2px -2px 0px 0px ${colors.darkprimary},
+    inset 2px 2px 0px 0px ${colors.secondary};
+
+  &:hover {
+    background-color: ${colors.secondary};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const PrimaryButton = styled(StyledButton)`
+  box-shadow: inset -1px -1px 0px 0px ${colors.black},
+    inset 1px 1px 0px 0px ${colors.black},
+    inset -3px -3px 0px 0px ${colors.black},
+    inset 2px 2px 0px 0px #ffffff,
+    inset -4px -4px 0px 0px ${colors.darkprimary},
+    inset 3px 3px 0px 0px ${colors.secondary};
+`;
+
+export default function SignUpPage() {
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [userId, setUserId] = useState('');
+  const [email, setEmail] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(180);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isEmailSent || timeLeft <= 0) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isEmailSent]);
+
+  const formatTime = (seconds: number): string => {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const handleSendEmail = async () => {
+    if (!email) {
+      alert('이메일을 입력해 주세요.');
+      return;
+    }
+    if (!email.includes('@')) {
+      alert('이메일 형식이 잘못되었습니다.');
+      return;
+    }
+    if (isVerified) {
+      alert('이미 인증을 하셨습니다.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await emailValidationRequest({ email });
+      setIsEmailSent(true);
+      setTimeLeft(180);
+      alert('이메일이 성공적으로 전송되었습니다.');
+    } catch (err) {
+      alert('이메일 전송 실패: 다시 입력해 주세요!');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (isVerified) {
+      alert('이미 인증을 하셨습니다.');
+      return;
+    }
+    if (verificationCode.length !== 5) {
+      alert('인증코드 5자리를 입력하지 않았습니다.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await verifyEmailCode({ email, authorizationCode: verificationCode });
+      setIsVerified(true);
+      alert('인증이 완료되었습니다.');
+    } catch (err) {
+      alert('인증 실패: 다시 입력해 주세요');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignUp = async () => {
+    // 유효성 검사
+    if (!name) {
+      alert('사용자 이름을 입력해 주세요.');
+      return;
+    }
+    if (!userId) {
+      alert('아이디를 입력해 주세요.');
+      return;
+    }
+    if (userId.length < 6 || userId.length > 16) {
+      alert('아이디는 6~16자 이내로 입력해주세요.');
+      return;
+    }
+    if (!email) {
+      alert('이메일을 입력해 주세요.');
+      return;
+    }
+    if (!email.includes('@')) {
+      alert('이메일 형식이 잘못되었습니다.');
+      return;
+    }
+    if (!isVerified) {
+      alert('이메일 인증을 완료해주세요.');
+      return;
+    }
+    if (!password) {
+      alert('비밀번호를 입력해 주세요.');
+      return;
+    }
+    if (password.length < 8 || password.length > 20) {
+      alert('비밀번호는 8~20자 이내로 입력해주세요.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await signUp({ name, userId, email, password });
+      alert('회원가입이 완료되었습니다.');
+      router.push('/login');
+    } catch (err) {
+      alert('회원가입 실패: 다시 시도해 주세요');
+      console.error('Signup error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    router.push('/login');
+  };
+
+  return (
+    <Container>
+      <WindowContainer>
+        <ContentWrapper>
+          <WindowHeader />
+          <MainContent>
+            <LogoSection>
+              <img src="/assets/windeath-logo.svg" alt="Windeath 44" />
+            </LogoSection>
+            <Divider />
+            <FormSection>
+              <FormFields>
+                <Input
+                  label="사용자 이름:"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <Input
+                  label="아이디:"
+                  type="text"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  placeholder="아이디 (6~16자)"
+                  required
+                />
+                <InputRow>
+                  <Input
+                    label="이메일:"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="example@email.com"
+                    required
+                  />
+                  <SmallButton onClick={handleSendEmail} disabled={isLoading}>
+                    {isVerified ? '인증완료' : isEmailSent ? '코드 재전송' : '코드 전송'}
+                  </SmallButton>
+                </InputRow>
+                <InputRow>
+                  <Input
+                    label="인증 코드:"
+                    type="text"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                    maxLength={5}
+                    required
+                  />
+                  <TimerBox>{formatTime(timeLeft)}</TimerBox>
+                  <SmallButton onClick={handleVerifyCode} disabled={isLoading || isVerified}>
+                    확인
+                  </SmallButton>
+                </InputRow>
+                <Input
+                  label="비밀번호:"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="비밀번호 (8~20자)"
+                  required
+                />
+                <Input
+                  label="비밀번호 재입력:"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </FormFields>
+              <ButtonGroup>
+                <StyledButton onClick={handleCancel}>취소</StyledButton>
+                <PrimaryButton onClick={handleSignUp} disabled={isLoading}>
+                  확인
+                </PrimaryButton>
+              </ButtonGroup>
+            </FormSection>
+          </MainContent>
+        </ContentWrapper>
+      </WindowContainer>
+    </Container>
+  );
+}
