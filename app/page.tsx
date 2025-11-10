@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
 import Button from '@/components/ui/Button';
 import Whiteboard from '@/components/ui/Whiteboard';
@@ -145,16 +146,20 @@ const todayRankings = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+
   const handleSearch = () => {
     console.log('추모관 검색');
+    // TODO: 검색 페이지로 이동
   };
 
   const handleFavorites = () => {
     console.log('즐겨찾기');
+    // TODO: 즐겨찾기 페이지로 이동
   };
 
   const handleLogin = () => {
-    console.log('로그인');
+    router.push('/login');
   };
 
   return (

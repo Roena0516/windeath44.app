@@ -4,13 +4,11 @@
 const protocol = 'https://';
 const server = process.env.NEXT_PUBLIC_SERVER || 'api.example.com';
 
-export const endpoints = {
-  auth: `${protocol}${server}/auth`,
-  user: `${protocol}${server}/users`,
-  memorial: `${protocol}${server}/memorials`,
-  memorialTracing: `${protocol}${server}/memorial-tracing`,
-  memorialApplication: `${protocol}${server}/applications`,
-  anime: `${protocol}${server}/animes`,
-  chatbot: `${protocol}${server}/chatbots`,
-  notification: `${protocol}${server}/notifications`,
-};
+export const auth = `${protocol}${server}/auth`;
+export const user = `${protocol}${server}/users`;
+export const memorial = `${protocol}${server}/memorials`;
+export const memorialTracing = `${protocol}${server}/memorial-tracing`;
+export const memorial_application = `${protocol}${server}/applications`;
+export const anime = `${protocol}${server}/animes`;
+export const chatbot = `${protocol}${server}/chatbots`;
+export const notification = `${protocol}${server}/notifications`;
