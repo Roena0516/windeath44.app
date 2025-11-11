@@ -716,8 +716,7 @@ export default function MemorialPage() {
   };
 
   const handleBowClick = () => {
-    // TODO: Navigate to bow page or implement bow functionality
-    console.log('절 하러가기 clicked for memorial:', memorialId);
+    router.push(`/bow/${memorialId}`);
   };
 
   if (isLoading) {
