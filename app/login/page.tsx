@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
-import Button from '@/components/ui/Button';
+import MemorialBtn from '@/components/ui/MemorialBtn';
 import Input from '@/components/ui/Input';
 import { colors, fonts } from '@/lib/styles/theme';
 import { logIn } from '@/lib/api/auth';
@@ -96,47 +96,6 @@ const ButtonGroup = styled.div`
   padding: 8px;
 `;
 
-const StyledButton = styled.button`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 40px;
-  padding: 9px 24px;
-  background-color: ${colors.lightprimary};
-  font-family: ${fonts.primary};
-  font-size: 18px;
-  line-height: 15px;
-  color: ${colors.black};
-  text-align: center;
-  white-space: nowrap;
-  border: none;
-  cursor: pointer;
-  box-shadow: inset -1px -1px 0px 0px ${colors.black},
-    inset 1px 1px 0px 0px #ffffff,
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.secondary};
-
-  &:hover {
-    background-color: ${colors.secondary};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const PrimaryButton = styled(StyledButton)`
-  box-shadow: inset -1px -1px 0px 0px ${colors.black},
-    inset 1px 1px 0px 0px ${colors.black},
-    inset -3px -3px 0px 0px ${colors.black},
-    inset 2px 2px 0px 0px #ffffff,
-    inset -4px -4px 0px 0px ${colors.darkprimary},
-    inset 3px 3px 0px 0px ${colors.secondary};
-`;
-
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');
@@ -203,8 +162,24 @@ export default function LoginPage() {
                 />
               </FormFields>
               <ButtonGroup>
-                <StyledButton onClick={handleSignup}>회원가입</StyledButton>
-                <PrimaryButton onClick={handleLogin}>확인</PrimaryButton>
+                <MemorialBtn
+                  name="회원가입"
+                  onClick={handleSignup}
+                  type="submit"
+                  active={true}
+                  width="120px"
+                  height="40px"
+                  fontSize="18px"
+                />
+                <MemorialBtn
+                  name="확인"
+                  onClick={handleLogin}
+                  type="submit"
+                  active={true}
+                  width="120px"
+                  height="40px"
+                  fontSize="18px"
+                />
               </ButtonGroup>
             </FormSection>
           </MainContent>

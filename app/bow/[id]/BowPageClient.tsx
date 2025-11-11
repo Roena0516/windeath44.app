@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
+import MemorialBtn from '@/components/ui/MemorialBtn';
 import { colors, fonts } from '@/lib/styles/theme';
 import { getBowCount, submitBow, getBowChiefs, BowChief } from '@/lib/api/bow';
 import { getMemorial, MemorialData } from '@/lib/api/memorialGet';
@@ -162,35 +163,12 @@ const TableImage = styled.img`
   z-index: 1;
 `;
 
-const BowButton = styled.button`
+const BowButtonWrapper = styled.div`
   position: absolute;
   left: 50%;
   top: calc(50% + 76.009px);
   transform: translate(-50%, -50%);
   z-index: 5;
-  background-color: ${colors.lightprimary};
-  border: none;
-  padding: 7.492px 19.978px;
-  font-family: ${fonts.primary};
-  font-size: 17.17px;
-  line-height: 12.486px;
-  color: ${colors.black};
-  cursor: pointer;
-  box-shadow: inset -1.249px -1.249px 0px 0px ${colors.black},
-    inset 1.249px 1.249px 0px 0px #ffffff,
-    inset -2.497px -2.497px 0px 0px ${colors.darkprimary},
-    inset 2.497px 2.497px 0px 0px ${colors.secondary};
-
-  &:hover {
-    background-color: ${colors.secondary};
-  }
-
-  &:active {
-    box-shadow: inset 1.249px 1.249px 0px 0px ${colors.black},
-      inset -1.249px -1.249px 0px 0px #ffffff,
-      inset 2.497px 2.497px 0px 0px ${colors.darkprimary},
-      inset -2.497px -2.497px 0px 0px ${colors.secondary};
-  }
 `;
 
 const MournersSection = styled.div`
@@ -413,7 +391,9 @@ export default function BowPageClient({ memorialId }: { memorialId: number }) {
                     src="http://localhost:3845/assets/c7f5df363da0ee4283decb5df2ac795da9233e87.png"
                     alt="flowers"
                   />
-                  <BowButton onClick={handleBow}>절</BowButton>
+                  <BowButtonWrapper>
+                    <MemorialBtn name="절" onClick={handleBow} type="submit" active={true} />
+                  </BowButtonWrapper>
                 </AltarImagesWrapper>
               </AltarSection>
 

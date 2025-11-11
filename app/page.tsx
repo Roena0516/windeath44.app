@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
-import Button from '@/components/ui/Button';
+import MemorialBtn from '@/components/ui/MemorialBtn';
 import Whiteboard from '@/components/ui/Whiteboard';
 import RankingList from '@/components/common/RankingList';
 import { colors, fonts } from '@/lib/styles/theme';
@@ -186,15 +186,27 @@ export default function Home() {
 
                 <ActionsSection>
                   <ButtonGroup>
-                    <Button fullWidth onClick={handleSearch}>
-                      추모관 검색
-                    </Button>
-                    <Button fullWidth onClick={handleFavorites}>
-                      즐겨찾기
-                    </Button>
-                    <Button fullWidth onClick={handleLogin}>
-                      로그인
-                    </Button>
+                    <MemorialBtn
+                      name="추모관 검색"
+                      onClick={handleSearch}
+                      type="submit"
+                      active={true}
+                      width="100%"
+                    />
+                    <MemorialBtn
+                      name="즐겨찾기"
+                      onClick={handleFavorites}
+                      type="submit"
+                      active={true}
+                      width="100%"
+                    />
+                    <MemorialBtn
+                      name="로그인"
+                      onClick={handleLogin}
+                      type="submit"
+                      active={true}
+                      width="100%"
+                    />
                   </ButtonGroup>
 
                   <TodaySection>
