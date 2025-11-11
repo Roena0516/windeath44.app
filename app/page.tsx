@@ -149,8 +149,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleSearch = () => {
-    console.log('추모관 검색');
-    // TODO: 검색 페이지로 이동
+    router.push('/search');
   };
 
   const handleFavorites = () => {

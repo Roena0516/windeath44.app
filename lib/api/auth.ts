@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import axiosInstance from './axiosInstance';
-import { auth } from './config';
+import { auth as authEndpoint } from './config';
 
 interface LoginParams {
   id: string;
@@ -28,7 +28,7 @@ const deleteCookie = (name: string) => {
 export const logIn = async ({ id, password }: LoginParams): Promise<string> => {
   const data = { userId: id, password };
   try {
-    const response: AxiosResponse = await axiosInstance.post(`${auth}/login`, data, {
+    const response: AxiosResponse = await axiosInstance.post(`${authEndpoint}/login`, data, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
     });
@@ -46,7 +46,7 @@ export const logIn = async ({ id, password }: LoginParams): Promise<string> => {
 
 export const logOut = async (): Promise<void> => {
   try {
-    await axiosInstance.post(`${auth}/logout`, {}, {
+    await axiosInstance.post(`${authEndpoint}/logout`, {}, {
       withCredentials: true,
     });
   } finally {
