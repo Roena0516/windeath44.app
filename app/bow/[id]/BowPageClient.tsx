@@ -10,6 +10,7 @@ import { getBowCount, submitBow, getBowChiefs, BowChief } from '@/lib/api/bow';
 import { getMemorial, MemorialData } from '@/lib/api/memorialGet';
 import { getCharacter, CharacterData } from '@/lib/api/character';
 import Cookies from 'js-cookie';
+import { TableImage as TableImageAsset } from '@/assets';
 
 const Container = styled.div`
   width: 100%;
@@ -381,7 +382,7 @@ export default function BowPageClient({ memorialId }: { memorialId: number }) {
 
               <AltarSection>
                 <AltarImagesWrapper>
-                  <TableImage src="/assets/bow/table.svg" alt="table" />
+                  <TableImage src={TableImageAsset.src} alt="table" />
                   <CharacterFrame>
                     <CharacterImageBorder>
                       <CharacterImage src={character.imageUrl} alt={character.name} />

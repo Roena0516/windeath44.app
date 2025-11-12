@@ -10,6 +10,7 @@ import { getCharacter, CharacterData } from '@/lib/api/character';
 import { getAnimation } from '@/lib/api/animation';
 import { getMemorialComments, MemorialComment } from '@/lib/api/memorialComments';
 import { parseMemorialContent, extractTableOfContents } from '@/lib/utils/parseMemorialContent';
+import { MemorialRibbon } from '@/assets';
 
 const Container = styled.div`
   width: 100%;
@@ -777,7 +778,7 @@ export default function MemorialPage() {
                     <ContentContainer>
                       <ProfileSection>
                         <PictureContainer>
-                          <Ribbon src="/assets/memorial_ribbon.svg" alt="ribbon" />
+                          <Ribbon src={MemorialRibbon.src} alt="ribbon" />
                           <Picture imgUrl={characterData.imageUrl} />
                           <CharacterName>{characterData.name}</CharacterName>
                         </PictureContainer>

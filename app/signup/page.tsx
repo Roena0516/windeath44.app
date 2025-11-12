@@ -7,6 +7,7 @@ import WindowHeader from '@/components/layout/WindowHeader';
 import Input from '@/components/ui/Input';
 import { colors, fonts } from '@/lib/styles/theme';
 import { signUp, emailValidationRequest, verifyEmailCode } from '@/lib/api/user';
+import { WindeathLogo } from '@/assets';
 
 const Container = styled.div`
   width: 100%;
@@ -334,7 +335,7 @@ export default function SignUpPage() {
           <WindowHeader />
           <MainContent>
             <LogoSection>
-              <img src="/assets/windeath-logo.svg" alt="Windeath 44" />
+              <img src={WindeathLogo.src} alt="Windeath 44" />
             </LogoSection>
             <Divider />
             <FormSection>

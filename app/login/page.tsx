@@ -8,6 +8,7 @@ import MemorialBtn from '@/components/ui/MemorialBtn';
 import Input from '@/components/ui/Input';
 import { colors, fonts } from '@/lib/styles/theme';
 import { logIn } from '@/lib/api/auth';
+import { WindeathLogo } from '@/assets';
 
 const Container = styled.div`
   width: 100%;
@@ -136,10 +137,7 @@ export default function LoginPage() {
           <WindowHeader />
           <MainContent>
             <LogoSection>
-              <img
-                src="/assets/windeath-logo.svg"
-                alt="Windeath 44"
-              />
+              <img src={WindeathLogo.src} alt="Windeath 44" />
             </LogoSection>
             <Divider />
             <FormSection>

@@ -15,6 +15,7 @@ import {
   AnimeItem,
 } from '@/lib/api/anime';
 import { fetchMemorials, MemorialItem } from '@/lib/api/memorial';
+import { FolderIcon, SearchPointDown } from '@/assets';
 
 const Container = styled.div`
   width: 100%;
@@ -461,12 +462,12 @@ export default function SearchPage() {
             <Statusbar>
               <StatusContent>
                 <StatusIcon>
-                  <img src="http://localhost:3845/assets/e64598e892cbd0c8dc889d7ac0a91cfc9dcc5add.png" alt="folder" />
+                  <img src={FolderIcon.src} alt="folder" />
                 </StatusIcon>
                 <StatusText>{charactersWithMemorials.length} 개체</StatusText>
               </StatusContent>
               <DragIcon>
-                <img src="http://localhost:3845/assets/8da958fefff244cdf7c2ec10fc8ed2ee069747b6.svg" alt="drag" />
+                <img src={SearchPointDown.src} alt="drag" />
               </DragIcon>
             </Statusbar>
           </MainContent>

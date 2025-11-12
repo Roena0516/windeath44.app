@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import { colors, fonts } from '@/lib/styles/theme';
+import { MinIcon, FullIcon, ExitIcon, WindeathLogo } from '@/assets';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -75,7 +76,7 @@ interface WindowHeaderProps {
 }
 
 export default function WindowHeader({
-  logoSrc = 'http://localhost:3845/assets/8b902e5b51af260ce301ba6c0301dd7ff5c12065.svg',
+  logoSrc = WindeathLogo.src,
   onMinimize,
   onMaximize,
   onClose,
@@ -90,13 +91,13 @@ export default function WindowHeader({
       </LogoSection>
       <WindowButtons>
         <WindowBtn onClick={onMinimize}>
-          <img src="/assets/headerButton/min.svg" alt="Minimize" />
+          <img src={MinIcon.src} alt="Minimize" />
         </WindowBtn>
         <WindowBtn onClick={onMaximize}>
-          <img src="/assets/headerButton/full.svg" alt="Maximize" />
+          <img src={FullIcon.src} alt="Maximize" />
         </WindowBtn>
         <WindowBtn onClick={onClose}>
-          <img src="/assets/headerButton/exit.svg" alt="Close" />
+          <img src={ExitIcon.src} alt="Close" />
         </WindowBtn>
       </WindowButtons>
     </HeaderContainer>
