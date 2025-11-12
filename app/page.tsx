@@ -1,142 +1,11 @@
 'use client';
 
-import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
 import MemorialBtn from '@/components/ui/MemorialBtn';
 import Whiteboard from '@/components/ui/Whiteboard';
 import RankingList from '@/components/common/RankingList';
-import { colors, fonts } from '@/lib/styles/theme';
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: ${colors.white};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const WindowContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.white};
-  border: 2.572px solid ${colors.primary};
-  display: flex;
-  flex-direction: column;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 8.572px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  width: 100%;
-  background-color: ${colors.lightprimary};
-  border: 2.572px solid ${colors.stroke};
-  padding: 20px 24px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-`;
-
-const InnerContent = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-top: 8px;
-`;
-
-const TitleSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const MainTitle = styled.h1`
-  font-family: ${fonts.primary};
-  font-size: 32px;
-  font-weight: normal;
-  color: ${colors.black};
-  margin: 0;
-  line-height: normal;
-`;
-
-const Version = styled.p`
-  font-family: ${fonts.primary};
-  font-size: 18px;
-  color: ${colors.black};
-  margin: 0;
-  width: 115px;
-  line-height: normal;
-`;
-
-const ScrollableSection = styled.div`
-  flex: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  overflow-y: auto;
-  justify-content: center;
-`;
-
-const DescriptionText = styled.div`
-  font-family: ${fonts.primary};
-  font-size: 16px;
-  color: ${colors.black};
-  line-height: normal;
-  width: 100%;
-
-  p {
-    margin: 0 0 12px 0;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-`;
-
-const ButtonGroup = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const ActionsSection = styled.div`
-  flex: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-  justify-content: center;
-`;
-
-const TodaySection = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const SectionTitle = styled.h2`
-  font-family: ${fonts.primary};
-  font-size: 20px;
-  font-weight: normal;
-  color: ${colors.black};
-  margin: 0;
-  line-height: normal;
-`;
+import * as _ from './styles';
 
 // Mock data for today's memorials
 const todayRankings = [
@@ -162,30 +31,27 @@ export default function Home() {
   };
 
   return (
-    <Container>
-      <WindowContainer>
-        <ContentWrapper>
+    <_.Container>
+      <_.WindowContainer>
+        <_.ContentWrapper>
           <WindowHeader />
-          <MainContent>
-            <InnerContent>
-              <TitleSection>
-                <MainTitle>최애의 사인</MainTitle>
-                <Version>ver 0.0.1</Version>
-              </TitleSection>
+          <_.MainContent>
+            <_.InnerContent>
+              <_.TitleSection>
+                <_.MainTitle>최애의 사인</_.MainTitle>
+                <_.Version>ver beta m0.0.1</_.Version>
+              </_.TitleSection>
 
-              <ScrollableSection>
+              <_.ScrollableSection>
                 <Whiteboard padding="16px">
-                  <DescriptionText>
-                    <p>
-                      최애의 사인은 작품 내에서 사망한 애니메이션 캐릭터를 추모하는
-                      공간입니다.
-                    </p>
+                  <_.DescriptionText>
+                    <p>최애의 사인은 작품 내에서 사망한 애니메이션 캐릭터를 추모하는 공간입니다.</p>
                     <p>아래의 버튼을 눌러 계속 진행할 수 있습니다.</p>
-                  </DescriptionText>
+                  </_.DescriptionText>
                 </Whiteboard>
 
-                <ActionsSection>
-                  <ButtonGroup>
+                <_.ActionsSection>
+                  <_.ButtonGroup>
                     <MemorialBtn
                       name="추모관 검색"
                       onClick={handleSearch}
@@ -207,18 +73,18 @@ export default function Home() {
                       active={true}
                       width="100%"
                     />
-                  </ButtonGroup>
+                  </_.ButtonGroup>
 
-                  <TodaySection>
-                    <SectionTitle>오늘의 추모관</SectionTitle>
+                  <_.TodaySection>
+                    <_.SectionTitle>오늘의 추모관</_.SectionTitle>
                     <RankingList items={todayRankings} />
-                  </TodaySection>
-                </ActionsSection>
-              </ScrollableSection>
-            </InnerContent>
-          </MainContent>
-        </ContentWrapper>
-      </WindowContainer>
-    </Container>
+                  </_.TodaySection>
+                </_.ActionsSection>
+              </_.ScrollableSection>
+            </_.InnerContent>
+          </_.MainContent>
+        </_.ContentWrapper>
+      </_.WindowContainer>
+    </_.Container>
   );
 }

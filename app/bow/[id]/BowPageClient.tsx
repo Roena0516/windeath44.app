@@ -1,283 +1,15 @@
 'use client';
 
-import styled from '@emotion/styled';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
 import MemorialBtn from '@/components/ui/MemorialBtn';
-import { colors, fonts } from '@/lib/styles/theme';
 import { getBowCount, submitBow, getBowChiefs, BowChief } from '@/lib/api/bow';
 import { getMemorial, MemorialData } from '@/lib/api/memorialGet';
 import { getCharacter, CharacterData } from '@/lib/api/character';
 import Cookies from 'js-cookie';
 import { TableImage as TableImageAsset } from '@/assets';
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: ${colors.white};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const WindowContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.white};
-  border: 2.572px solid ${colors.primary};
-  display: flex;
-  flex-direction: column;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 8.572px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  width: 100%;
-  background-color: ${colors.lightprimary};
-  border: 2.572px solid ${colors.stroke};
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-`;
-
-const ContentInner = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 24px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  overflow-y: auto;
-`;
-
-const BowCountSection = styled.div`
-  font-family: ${fonts.primary};
-  font-size: 20px;
-  line-height: normal;
-  color: #2e2e2e;
-
-  p {
-    margin: 0;
-  }
-`;
-
-const AltarSection = styled.div`
-  width: 100%;
-  height: 288px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 16px;
-`;
-
-const AltarImagesWrapper = styled.div`
-  position: relative;
-  width: 372px;
-  height: 274px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CandleLeft = styled.img`
-  position: absolute;
-  left: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 64px;
-  height: 120px;
-  z-index: 2;
-`;
-
-const CandleRight = styled.img`
-  position: absolute;
-  right: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 64px;
-  height: 120px;
-  z-index: 2;
-`;
-
-const CharacterFrame = styled.div`
-  position: absolute;
-  left: 50%;
-  top: calc(50% - 51.083px);
-  transform: translate(-50%, -50%);
-  width: 150.278px;
-  height: 185.544px;
-  z-index: 4;
-  overflow: hidden;
-`;
-
-const CharacterImageBorder = styled.div`
-  position: absolute;
-  width: 150.664px;
-  height: 186.51px;
-  left: 0;
-  top: -0.08px;
-  background-color: white;
-  border: 14.374px solid black;
-  overflow: hidden;
-`;
-
-const CharacterImage = styled.img`
-  width: 267.658px;
-  height: 186.51px;
-  position: absolute;
-  left: -54.22px;
-  top: 0.07px;
-  object-fit: cover;
-  object-position: 50% 50%;
-`;
-
-const FlowerDecoration = styled.img`
-  position: absolute;
-  width: 372px;
-  height: 274px;
-  left: 50%;
-  top: calc(50% + 3.28px);
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  pointer-events: none;
-`;
-
-const TableImage = styled.img`
-  position: absolute;
-  width: 372px;
-  height: 274px;
-  left: 50%;
-  top: calc(50% + 3.28px);
-  transform: translate(-50%, -50%);
-  z-index: 1;
-`;
-
-const BowButtonWrapper = styled.div`
-  position: absolute;
-  left: 50%;
-  top: calc(50% + 76.009px);
-  transform: translate(-50%, -50%);
-  z-index: 5;
-`;
-
-const MournersSection = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-`;
-
-const MournersTitle = styled.div`
-  font-family: ${fonts.primary};
-  font-size: 20px;
-  color: #2e2e2e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const MournersList = styled.div`
-  width: 100%;
-  background-color: white;
-  overflow: hidden;
-  box-shadow: inset -1px -1px 0px 0px #ffffff,
-    inset 1px 1px 0px 0px ${colors.black},
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.darkprimary};
-`;
-
-const MournersInner = styled.div`
-  width: 100%;
-  background-color: #cccccc;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-`;
-
-const MournerItem = styled.div`
-  width: 100%;
-  background-color: white;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-sizing: border-box;
-`;
-
-const MournerRankAndAvatar = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-
-const MournerRank = styled.p`
-  font-family: ${fonts.primary};
-  font-weight: bold;
-  font-size: 18px;
-  color: ${colors.stroke};
-  width: 30px;
-  margin: 0;
-  flex-shrink: 0;
-`;
-
-const MournerAvatar = styled.div<{ imgUrl?: string }>`
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  background-image: ${(props) => (props.imgUrl ? `url(${props.imgUrl})` : 'none')};
-  background-size: cover;
-  background-position: center;
-  background-color: ${(props) => (props.imgUrl ? 'transparent' : colors.lightprimary)};
-  border: ${(props) => (props.imgUrl ? 'none' : `1px solid ${colors.stroke}`)};
-`;
-
-const MournerInfo = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 0;
-`;
-
-const MournerNameSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-
-const MournerName = styled.p`
-  font-family: ${fonts.primary};
-  font-size: 14px;
-  color: ${colors.darkdark};
-  margin: 0;
-`;
-
-const MournerBadge = styled.p`
-  font-family: ${fonts.primary};
-  font-size: 12px;
-  color: ${colors.black};
-  margin: 0;
-`;
-
-const MournerCount = styled.p`
-  font-family: ${fonts.primary};
-  font-size: 12px;
-  color: ${colors.black};
-  margin: 0;
-`;
+import * as _ from './styles';
 
 export default function BowPageClient({ memorialId }: { memorialId: number }) {
   const router = useRouter();
@@ -353,104 +85,115 @@ export default function BowPageClient({ memorialId }: { memorialId: number }) {
 
   if (isLoading || !character) {
     return (
-      <Container>
-        <WindowContainer>
-          <ContentWrapper>
+      <_.Container>
+        <_.WindowContainer>
+          <_.ContentWrapper>
             <WindowHeader />
-            <MainContent>
-              <ContentInner>
+            <_.MainContent>
+              <_.ContentInner>
                 <div style={{ textAlign: 'center', padding: '20px' }}>불러오는 중...</div>
-              </ContentInner>
-            </MainContent>
-          </ContentWrapper>
-        </WindowContainer>
-      </Container>
+              </_.ContentInner>
+            </_.MainContent>
+          </_.ContentWrapper>
+        </_.WindowContainer>
+      </_.Container>
     );
   }
 
   return (
-    <Container>
-      <WindowContainer>
-        <ContentWrapper>
+    <_.Container>
+      <_.WindowContainer>
+        <_.ContentWrapper>
           <WindowHeader />
-          <MainContent>
-            <ContentInner>
-              <BowCountSection>
+          <_.MainContent>
+            <_.ContentInner>
+              <_.BowCountSection>
                 <p>절 하고 간 사람</p>
                 <p>{bowCount}명</p>
-              </BowCountSection>
+              </_.BowCountSection>
 
-              <AltarSection>
-                <AltarImagesWrapper>
-                  <TableImage src={TableImageAsset.src} alt="table" />
-                  <CharacterFrame>
-                    <CharacterImageBorder>
-                      <CharacterImage src={character.imageUrl} alt={character.name} />
-                    </CharacterImageBorder>
-                  </CharacterFrame>
-                  <FlowerDecoration
+              <_.AltarSection>
+                <_.AltarImagesWrapper>
+                  <_.TableImage
+                    src={TableImageAsset.src}
+                    alt="table"
+                  />
+                  <_.CharacterFrame>
+                    <_.CharacterImageBorder>
+                      <_.CharacterImage
+                        src={character.imageUrl}
+                        alt={character.name}
+                      />
+                    </_.CharacterImageBorder>
+                  </_.CharacterFrame>
+                  <_.FlowerDecoration
                     src="http://localhost:3845/assets/c7f5df363da0ee4283decb5df2ac795da9233e87.png"
                     alt="flowers"
                   />
-                  <BowButtonWrapper>
-                    <MemorialBtn name="절" onClick={handleBow} type="submit" active={true} />
-                  </BowButtonWrapper>
-                </AltarImagesWrapper>
-              </AltarSection>
+                  <_.BowButtonWrapper>
+                    <MemorialBtn
+                      name="절"
+                      onClick={handleBow}
+                      type="submit"
+                      active={true}
+                    />
+                  </_.BowButtonWrapper>
+                </_.AltarImagesWrapper>
+              </_.AltarSection>
 
-              <MournersSection>
-                <MournersTitle>조문객 명단</MournersTitle>
-                <MournersList>
-                  <MournersInner>
+              <_.MournersSection>
+                <_.MournersTitle>조문객 명단</_.MournersTitle>
+                <_.MournersList>
+                  <_.MournersInner>
                     {chiefs.slice(0, 3).map((chief, index) => (
-                      <MournerItem key={chief.userId}>
-                        <MournerRankAndAvatar>
-                          <MournerRank>#{index + 1}</MournerRank>
-                          <MournerAvatar imgUrl={chief.profileImageUrl} />
-                        </MournerRankAndAvatar>
-                        <MournerInfo>
-                          <MournerNameSection>
-                            <MournerName>{chief.name}</MournerName>
-                            <MournerBadge>(상주)</MournerBadge>
-                          </MournerNameSection>
-                          <MournerCount>{chief.bowCount}회</MournerCount>
-                        </MournerInfo>
-                      </MournerItem>
+                      <_.MournerItem key={chief.userId}>
+                        <_.MournerRankAndAvatar>
+                          <_.MournerRank>#{index + 1}</_.MournerRank>
+                          <_.MournerAvatar imgUrl={chief.profileImageUrl} />
+                        </_.MournerRankAndAvatar>
+                        <_.MournerInfo>
+                          <_.MournerNameSection>
+                            <_.MournerName>{chief.name}</_.MournerName>
+                            <_.MournerBadge>(상주)</_.MournerBadge>
+                          </_.MournerNameSection>
+                          <_.MournerCount>{chief.bowCount}회</_.MournerCount>
+                        </_.MournerInfo>
+                      </_.MournerItem>
                     ))}
-                  </MournersInner>
-                </MournersList>
+                  </_.MournersInner>
+                </_.MournersList>
 
                 {chiefs.length > 3 && currentUserId && (
-                  <MournersList>
-                    <MournersInner>
+                  <_.MournersList>
+                    <_.MournersInner>
                       {chiefs
                         .slice(3)
                         .filter((chief) => chief.userId === currentUserId)
                         .map((chief) => {
                           const actualRank = chiefs.findIndex((c) => c.userId === chief.userId) + 1;
                           return (
-                            <MournerItem key={chief.userId}>
-                              <MournerRankAndAvatar>
-                                <MournerRank>#{actualRank}</MournerRank>
-                                <MournerAvatar imgUrl={chief.profileImageUrl} />
-                              </MournerRankAndAvatar>
-                              <MournerInfo>
-                                <MournerNameSection>
-                                  <MournerName>{chief.name}</MournerName>
-                                </MournerNameSection>
-                                <MournerCount>{chief.bowCount}회</MournerCount>
-                              </MournerInfo>
-                            </MournerItem>
+                            <_.MournerItem key={chief.userId}>
+                              <_.MournerRankAndAvatar>
+                                <_.MournerRank>#{actualRank}</_.MournerRank>
+                                <_.MournerAvatar imgUrl={chief.profileImageUrl} />
+                              </_.MournerRankAndAvatar>
+                              <_.MournerInfo>
+                                <_.MournerNameSection>
+                                  <_.MournerName>{chief.name}</_.MournerName>
+                                </_.MournerNameSection>
+                                <_.MournerCount>{chief.bowCount}회</_.MournerCount>
+                              </_.MournerInfo>
+                            </_.MournerItem>
                           );
                         })}
-                    </MournersInner>
-                  </MournersList>
+                    </_.MournersInner>
+                  </_.MournersList>
                 )}
-              </MournersSection>
-            </ContentInner>
-          </MainContent>
-        </ContentWrapper>
-      </WindowContainer>
-    </Container>
+              </_.MournersSection>
+            </_.ContentInner>
+          </_.MainContent>
+        </_.ContentWrapper>
+      </_.WindowContainer>
+    </_.Container>
   );
 }

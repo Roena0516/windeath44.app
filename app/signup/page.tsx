@@ -1,191 +1,12 @@
 'use client';
 
-import styled from '@emotion/styled';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
 import Input from '@/components/ui/Input';
-import { colors, fonts } from '@/lib/styles/theme';
 import { signUp, emailValidationRequest, verifyEmailCode } from '@/lib/api/user';
 import { WindeathLogo } from '@/assets';
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: ${colors.white};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const WindowContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.white};
-  border: 2.572px solid ${colors.primary};
-  display: flex;
-  flex-direction: column;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 8.572px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  width: 100%;
-  background-color: ${colors.lightprimary};
-  border: 2.572px solid ${colors.stroke};
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-`;
-
-const LogoSection = styled.div`
-  width: 100%;
-  height: 108px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-`;
-
-const Divider = styled.div`
-  width: 100%;
-  height: 4px;
-  background-color: #ffeefd;
-  border: 2px solid ${colors.secondary};
-  flex-shrink: 0;
-`;
-
-const FormSection = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-`;
-
-const FormFields = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px 0;
-`;
-
-const InputRow = styled.div`
-  width: 100%;
-  display: flex;
-  gap: 4px;
-  align-items: flex-end;
-`;
-
-const TimerBox = styled.div`
-  width: 60px;
-  height: 32px;
-  background-color: ${colors.white};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: ${fonts.primary};
-  font-size: 14px;
-  color: ${colors.black};
-  box-shadow: inset -1px -1px 0px 0px #ffffff,
-    inset 1px 1px 0px 0px ${colors.black},
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.darkprimary};
-  flex-shrink: 0;
-`;
-
-const SmallButton = styled.button`
-  width: 100px;
-  height: 32px;
-  background-color: ${colors.lightprimary};
-  border: none;
-  font-family: ${fonts.primary};
-  font-size: 14px;
-  line-height: 15px;
-  color: ${colors.black};
-  cursor: pointer;
-  box-shadow: inset -1px -1px 0px 0px ${colors.black},
-    inset 1px 1px 0px 0px #ffffff,
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.secondary};
-  flex-shrink: 0;
-
-  &:hover {
-    background-color: ${colors.secondary};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const ButtonGroup = styled.div`
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  padding: 8px;
-`;
-
-const StyledButton = styled.button`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 40px;
-  padding: 9px 24px;
-  background-color: ${colors.lightprimary};
-  font-family: ${fonts.primary};
-  font-size: 18px;
-  line-height: 15px;
-  color: ${colors.black};
-  text-align: center;
-  white-space: nowrap;
-  border: none;
-  cursor: pointer;
-  box-shadow: inset -1px -1px 0px 0px ${colors.black},
-    inset 1px 1px 0px 0px #ffffff,
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.secondary};
-
-  &:hover {
-    background-color: ${colors.secondary};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const PrimaryButton = styled(StyledButton)`
-  box-shadow: inset -1px -1px 0px 0px ${colors.black},
-    inset 1px 1px 0px 0px ${colors.black},
-    inset -3px -3px 0px 0px ${colors.black},
-    inset 2px 2px 0px 0px #ffffff,
-    inset -4px -4px 0px 0px ${colors.darkprimary},
-    inset 3px 3px 0px 0px ${colors.secondary};
-`;
+import * as _ from './styles';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -329,17 +150,20 @@ export default function SignUpPage() {
   };
 
   return (
-    <Container>
-      <WindowContainer>
-        <ContentWrapper>
+    <_.Container>
+      <_.WindowContainer>
+        <_.ContentWrapper>
           <WindowHeader />
-          <MainContent>
-            <LogoSection>
-              <img src={WindeathLogo.src} alt="Windeath 44" />
-            </LogoSection>
-            <Divider />
-            <FormSection>
-              <FormFields>
+          <_.MainContent>
+            <_.LogoSection>
+              <img
+                src={WindeathLogo.src}
+                alt="Windeath 44"
+              />
+            </_.LogoSection>
+            <_.Divider />
+            <_.FormSection>
+              <_.FormFields>
                 <Input
                   label="사용자 이름:"
                   type="text"
@@ -355,7 +179,7 @@ export default function SignUpPage() {
                   placeholder="아이디 (6~16자)"
                   required
                 />
-                <InputRow>
+                <_.InputRow>
                   <Input
                     label="이메일:"
                     type="email"
@@ -364,11 +188,14 @@ export default function SignUpPage() {
                     placeholder="example@email.com"
                     required
                   />
-                  <SmallButton onClick={handleSendEmail} disabled={isLoading}>
+                  <_.SmallButton
+                    onClick={handleSendEmail}
+                    disabled={isLoading}
+                  >
                     {isVerified ? '인증완료' : isEmailSent ? '코드 재전송' : '코드 전송'}
-                  </SmallButton>
-                </InputRow>
-                <InputRow>
+                  </_.SmallButton>
+                </_.InputRow>
+                <_.InputRow>
                   <Input
                     label="인증 코드:"
                     type="text"
@@ -377,11 +204,14 @@ export default function SignUpPage() {
                     maxLength={5}
                     required
                   />
-                  <TimerBox>{formatTime(timeLeft)}</TimerBox>
-                  <SmallButton onClick={handleVerifyCode} disabled={isLoading || isVerified}>
+                  <_.TimerBox>{formatTime(timeLeft)}</_.TimerBox>
+                  <_.SmallButton
+                    onClick={handleVerifyCode}
+                    disabled={isLoading || isVerified}
+                  >
                     확인
-                  </SmallButton>
-                </InputRow>
+                  </_.SmallButton>
+                </_.InputRow>
                 <Input
                   label="비밀번호:"
                   type="password"
@@ -397,17 +227,20 @@ export default function SignUpPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-              </FormFields>
-              <ButtonGroup>
-                <StyledButton onClick={handleCancel}>취소</StyledButton>
-                <PrimaryButton onClick={handleSignUp} disabled={isLoading}>
+              </_.FormFields>
+              <_.ButtonGroup>
+                <_.StyledButton onClick={handleCancel}>취소</_.StyledButton>
+                <_.PrimaryButton
+                  onClick={handleSignUp}
+                  disabled={isLoading}
+                >
                   확인
-                </PrimaryButton>
-              </ButtonGroup>
-            </FormSection>
-          </MainContent>
-        </ContentWrapper>
-      </WindowContainer>
-    </Container>
+                </_.PrimaryButton>
+              </_.ButtonGroup>
+            </_.FormSection>
+          </_.MainContent>
+        </_.ContentWrapper>
+      </_.WindowContainer>
+    </_.Container>
   );
 }

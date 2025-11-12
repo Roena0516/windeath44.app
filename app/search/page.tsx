@@ -1,13 +1,12 @@
 'use client';
 
-import styled from '@emotion/styled';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import WindowHeader from '@/components/layout/WindowHeader';
 import Input from '@/components/ui/Input';
 import Dropdown from '@/components/ui/Dropdown';
 import SearchResultItem from '@/components/common/SearchResultItem';
-import { colors, fonts } from '@/lib/styles/theme';
+import * as _ from './styles';
 import {
   fetchIntegratedCharactersOffset,
   fetchAnimesPage,
@@ -16,199 +15,6 @@ import {
 } from '@/lib/api/anime';
 import { fetchMemorials, MemorialItem } from '@/lib/api/memorial';
 import { FolderIcon, SearchPointDown } from '@/assets';
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: ${colors.white};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const WindowContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.white};
-  border: 2.572px solid ${colors.primary};
-  display: flex;
-  flex-direction: column;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 8.572px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  width: 100%;
-  background-color: ${colors.lightprimary};
-  border: 2.572px solid ${colors.stroke};
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-`;
-
-const ContentInner = styled.div`
-  flex: 1;
-  width: 100%;
-  padding: 15px 16px 5px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  overflow: hidden;
-`;
-
-const SearchSection = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow: hidden;
-`;
-
-const ResultSection = styled.div`
-  flex: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow: hidden;
-`;
-
-const FilterBox = styled.div`
-  width: 100%;
-  background-color: ${colors.lightprimary};
-  padding: 24px 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  box-shadow: inset -1px -1px 0px 0px ${colors.black},
-    inset 1px 1px 0px 0px #ffffff,
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.secondary};
-`;
-
-const ResultsContainer = styled.div`
-  flex: 1;
-  width: 100%;
-  background-color: #ffeefd;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: inset -1px -1px 0px 0px #ffffff,
-    inset 1px 1px 0px 0px ${colors.black},
-    inset -2px -2px 0px 0px ${colors.darkprimary},
-    inset 2px 2px 0px 0px ${colors.darkprimary};
-`;
-
-const ResultsList = styled.div`
-  width: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-`;
-
-const PaginationWrapper = styled.div`
-  width: 100%;
-  padding: 8px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-`;
-
-const PageButton = styled.button<{ selected?: boolean }>`
-  width: 32px;
-  height: 32px;
-  background-color: ${colors.lightprimary};
-  border: none;
-  font-family: ${fonts.primary};
-  font-size: 16px;
-  color: ${colors.black};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: ${(props) =>
-    props.selected
-      ? `inset -1px -1px 0px 0px ${colors.black}, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px ${colors.darkprimary}, inset 2px 2px 0px 0px ${colors.secondary}`
-      : `inset -1px -1px 0px 0px #ffffff, inset 1px 1px 0px 0px ${colors.black}, inset -2px -2px 0px 0px ${colors.secondary}, inset 2px 2px 0px 0px ${colors.darkprimary}`};
-
-  &:hover {
-    background-color: ${colors.secondary};
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const PageDots = styled.span`
-  font-family: ${fonts.primary};
-  font-size: 16.5px;
-  color: #7c547b;
-`;
-
-const Statusbar = styled.div`
-  width: 100%;
-  height: auto;
-  background-color: ${colors.darkprimary};
-  padding: 2px 4.5px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  box-shadow: inset -1.5px -1.5px 0px 0px #ffffff, inset 1.5px 1.5px 0px 0px #808080;
-`;
-
-const StatusContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4.5px;
-`;
-
-const StatusIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-`;
-
-const StatusText = styled.p`
-  font-family: ${fonts.primary};
-  font-size: 16.5px;
-  line-height: 15px;
-  color: ${colors.black};
-`;
-
-const DragIcon = styled.div`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 19.5px;
-  height: 19.5px;
-
-  img {
-    width: 100%;
-    height: 100%;
-  }
-`;
 
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {
@@ -378,14 +184,14 @@ export default function SearchPage() {
   };
 
   return (
-    <Container>
-      <WindowContainer>
-        <ContentWrapper>
+    <_.Container>
+      <_.WindowContainer>
+        <_.ContentWrapper>
           <WindowHeader />
-          <MainContent>
-            <ContentInner>
-              <SearchSection>
-                <FilterBox>
+          <_.MainContent>
+            <_.ContentInner>
+              <_.SearchSection>
+                <_.FilterBox>
                   <Input
                     label="이름"
                     type="text"
@@ -404,12 +210,12 @@ export default function SearchPage() {
                     options={deathReason}
                     onChange={setFillDeath}
                   />
-                </FilterBox>
-              </SearchSection>
+                </_.FilterBox>
+              </_.SearchSection>
 
-              <ResultSection>
-                <ResultsContainer>
-                  <ResultsList>
+              <_.ResultSection>
+                <_.ResultsContainer>
+                  <_.ResultsList>
                     {isLoading ? (
                       <div style={{ padding: '20px', textAlign: 'center' }}>불러오는 중...</div>
                     ) : (
@@ -424,55 +230,64 @@ export default function SearchPage() {
                         />
                       ))
                     )}
-                  </ResultsList>
-                  <PaginationWrapper>
-                    <PageButton
+                  </_.ResultsList>
+                  <_.PaginationWrapper>
+                    <_.PageButton
                       selected={pageNumber === 1}
                       onClick={() => setPageNumber(1)}
                     >
                       1
-                    </PageButton>
-                    <PageDots>...</PageDots>
+                    </_.PageButton>
+                    <_.PageDots>...</_.PageDots>
                     {pageNumber > 1 && (
-                      <PageButton onClick={() => setPageNumber(pageNumber - 1)}>
+                      <_.PageButton onClick={() => setPageNumber(pageNumber - 1)}>
                         {pageNumber - 1}
-                      </PageButton>
+                      </_.PageButton>
                     )}
                     {pageNumber !== 1 && pageNumber !== maxPage && (
-                      <PageButton selected onClick={() => setPageNumber(pageNumber)}>
+                      <_.PageButton
+                        selected
+                        onClick={() => setPageNumber(pageNumber)}
+                      >
                         {pageNumber}
-                      </PageButton>
+                      </_.PageButton>
                     )}
                     {pageNumber < maxPage && (
-                      <PageButton onClick={() => setPageNumber(pageNumber + 1)}>
+                      <_.PageButton onClick={() => setPageNumber(pageNumber + 1)}>
                         {pageNumber + 1}
-                      </PageButton>
+                      </_.PageButton>
                     )}
-                    <PageDots>...</PageDots>
-                    <PageButton
+                    <_.PageDots>...</_.PageDots>
+                    <_.PageButton
                       selected={pageNumber === maxPage}
                       onClick={() => setPageNumber(maxPage)}
                     >
                       {maxPage}
-                    </PageButton>
-                  </PaginationWrapper>
-                </ResultsContainer>
-              </ResultSection>
-            </ContentInner>
-            <Statusbar>
-              <StatusContent>
-                <StatusIcon>
-                  <img src={FolderIcon.src} alt="folder" />
-                </StatusIcon>
-                <StatusText>{charactersWithMemorials.length} 개체</StatusText>
-              </StatusContent>
-              <DragIcon>
-                <img src={SearchPointDown.src} alt="drag" />
-              </DragIcon>
-            </Statusbar>
-          </MainContent>
-        </ContentWrapper>
-      </WindowContainer>
-    </Container>
+                    </_.PageButton>
+                  </_.PaginationWrapper>
+                </_.ResultsContainer>
+              </_.ResultSection>
+            </_.ContentInner>
+            <_.Statusbar>
+              <_.StatusContent>
+                <_.StatusIcon>
+                  <img
+                    src={FolderIcon.src}
+                    alt="folder"
+                  />
+                </_.StatusIcon>
+                <_.StatusText>{charactersWithMemorials.length} 개체</_.StatusText>
+              </_.StatusContent>
+              <_.DragIcon>
+                <img
+                  src={SearchPointDown.src}
+                  alt="drag"
+                />
+              </_.DragIcon>
+            </_.Statusbar>
+          </_.MainContent>
+        </_.ContentWrapper>
+      </_.WindowContainer>
+    </_.Container>
   );
 }
